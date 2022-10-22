@@ -2,6 +2,8 @@ import sqlite3
 import time
 import getpass
 
+from sympy import false, true
+
 connection = None
 cursor = None
 
@@ -23,6 +25,8 @@ def login():
     password = getpass.getpass("Password: ")
 
     username = username.lower()
+    userLoginBool = false
+    artistLoginBool = false
 
     # Check that credentials are in the users table
     cursor.execute(
@@ -37,6 +41,8 @@ def login():
         ),
     )
     userRows = cursor.fetchall()
+    if len(userRows) > 0:
+        userLoginBool = true
 
     # Check that credentials are in the artists table
     cursor.execute(
@@ -48,6 +54,11 @@ def login():
         (username, password),
     )
     artistRows = cursor.fetchall()
+    if len(artistRows) > 0:
+        artistLoginBool = true
+
+    print(userLoginBool)
+    print(artistLoginBool)
 
 
 def main():

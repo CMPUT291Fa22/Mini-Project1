@@ -73,8 +73,10 @@ create table perform (
     This is a set of test cases for the login screen.
 */
 insert into users values ("admin", "admin", "admin");
+insert into users values ("junye", "John Yu", "junye");
 
 insert into artists values ("a0", "Justin Bieber", "Canadian", "a0");
+insert into artists values ("junye", "John Yu", "Canadian", "junye");
 
 /*
     This is a set of test cases for the system functionalities.
