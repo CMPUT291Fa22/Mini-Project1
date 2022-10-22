@@ -37,8 +37,10 @@ def sys_func(connection, cursor, username):
 #
 def sys_func_ui(connection, cursor):
     while True:
+        os.system("cls")
         print(
-            """(1) Start a session
+            """System Functionality Operations:
+(1) Start a session
 (2) Search for songs and playlists
 (3) Search for artists
 (4) End the session
@@ -64,10 +66,27 @@ def sys_func_ui(connection, cursor):
 
 #
 # This function starts a new session
-# Input: connection, cursor
+# Input: connection, cursor, username
 # Output: None
 #
 def start_new_session(connection, cursor, username):
+    # Check that there isn't an active session
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM sessions
+        WHERE uid == ?
+        AND end IS NULL""",
+        (username,),
+    )
+    num_of_active_sessions = cursor.fetchone()[0]
+    if num_of_active_sessions > 0:
+        print(
+            "A session is currently active. Please close all active sessions before creating a new session."
+        )
+        input("Press enter to continue!")
+        return
+
     current_date = time.strftime("%Y-%m-%d %H:%M:%S")
 
     # Create a unique session number (sno)
@@ -87,4 +106,5 @@ def start_new_session(connection, cursor, username):
             ?, ?, ?, NULL);""",
         (username, sno, current_date),
     )
+    input("Session created successfully. Press enter to continue.")
     connection.commit()
