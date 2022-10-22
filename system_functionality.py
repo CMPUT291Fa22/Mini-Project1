@@ -15,7 +15,7 @@ def sys_func(connection, cursor, username):
         elif sys_func_op == 3:
             pass
         elif sys_func_op == 4:
-            pass
+            end_current_session(connection, cursor, username)
         elif sys_func_op == 5:
             pass
         elif sys_func_op == 6:
@@ -76,7 +76,7 @@ def start_new_session(connection, cursor, username):
         SELECT COUNT(*)
         FROM sessions
         WHERE uid == ?
-        AND end IS NULL""",
+        AND end IS NULL;""",
         (username,),
     )
     num_of_active_sessions = cursor.fetchone()[0]
@@ -94,7 +94,7 @@ def start_new_session(connection, cursor, username):
         """
         SELECT COUNT(sno)
         FROM sessions
-        WHERE uid == ?""",
+        WHERE uid == ?;""",
         (username,),
     )
     sno = cursor.fetchone()[0]  # The sno will just be the current number of sessions
@@ -108,3 +108,22 @@ def start_new_session(connection, cursor, username):
     )
     input("Session created successfully. Press enter to continue.")
     connection.commit()
+
+
+#
+# This function ends the current active session
+# Input: connection, cursor, username
+# Output: None
+#
+def end_current_session(connection, cursor, username):
+    current_date = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    cursor.execute(
+        """
+        UPDATE sessions SET end = ?
+        WHERE uid == ?
+        AND end IS NULL;""",
+        (current_date, username),
+    )
+    connection.commit()
+    input("Session ended successfully. Press enter to continue.")
