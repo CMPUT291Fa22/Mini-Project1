@@ -16,6 +16,7 @@ def connect(path):
 def main():
     global connection, cursor
 
+    os.system("cls")
     dbString = input("Database Name: ")
     path = "./" + dbString
     connect(path)
@@ -32,9 +33,12 @@ def main():
             else:  # loginType == 2:
                 # Invoke the artist actions UI
                 pass
-        else:  # Sign up
+        elif selection == 2:  # Sign up
             username = sign_up(connection, cursor)
             sys_func(connection, cursor, username)
+        else:
+            os.system("cls")
+            break
 
     connection.commit()
     connection.close()

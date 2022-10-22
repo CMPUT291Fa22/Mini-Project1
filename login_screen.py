@@ -11,13 +11,16 @@ def main_screen(connection, cursor):
         print("--- Main Screen ---")
         print(
             """Press 1 to login
-Press 2 to sign up"""
+Press 2 to sign up
+Press 3 to exit"""
         )
         selection = input()
         if selection == "1":
             return 1
         elif selection == "2":
             return 2
+        elif selection == "3":
+            return 3
         else:
             pass
 

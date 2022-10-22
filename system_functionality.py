@@ -11,7 +11,7 @@ def sys_func(connection, cursor, username):
         if sys_func_op == 1:
             start_new_session(connection, cursor, username)
         elif sys_func_op == 2:
-            pass
+            search_for_song_and_playlist(connection, cursor)
         elif sys_func_op == 3:
             pass
         elif sys_func_op == 4:
@@ -20,7 +20,7 @@ def sys_func(connection, cursor, username):
             logout(connection, cursor, username)
             return
         elif sys_func_op == 6:
-            pass
+            exit_program(connection, cursor, username)
         else:
             pass
 
@@ -112,6 +112,17 @@ def start_new_session(connection, cursor, username):
 
 
 #
+# This function searches among songs and playlists
+# Input: connection, cursor
+# Output: None
+#
+def search_for_song_and_playlist(connection, cursor):
+    print("Retrieve songs and playlists by keywords. Separate keywords using space.")
+    keywords = input().split()
+    print(keywords)
+
+
+#
 # This function ends the current active session
 # Input: connection, cursor, username
 # Output: None
@@ -147,3 +158,26 @@ def logout(connection, cursor, username):
         (current_date, username),
     )
     connection.commit()
+
+
+#
+# This function directly quits the program
+# Input: connection, cursor, username
+# Output: None
+#
+def exit_program(connection, cursor, username):
+    current_date = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Close all active sessions
+    cursor.execute(
+        """
+        UPDATE sessions SET end = ?
+        WHERE uid == ?
+        AND end IS NULL;""",
+        (current_date, username),
+    )
+    connection.commit()
+    connection.close()
+
+    os.system("cls")
+    quit()
