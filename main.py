@@ -28,13 +28,14 @@ def main():
                 print("Cannot find account matching these credentials.")
             elif loginType == 1:
                 # Invoke the system functionalities UI
-                sysOperationType = sys_func_ui(connection, cursor)
+                sys_func(connection, cursor)
                 print(sysOperationType)
             else:  # loginType == 2:
                 # Invoke the artist actions UI
                 pass
         else:  # Sign up
             sign_up(connection, cursor)
+            sys_func(connection, cursor)
 
 
 if __name__ == "__main__":

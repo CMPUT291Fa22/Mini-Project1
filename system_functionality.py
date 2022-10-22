@@ -1,5 +1,12 @@
 from settings import *
 
+
+def sys_func(connection, cursor):
+    while True:
+        sys_func_op = sys_func_ui(connection, cursor)
+        print(sys_func_op)
+
+
 #
 # This function creates a prompt to perform system functionality operations.
 # Input: connection, cursor
