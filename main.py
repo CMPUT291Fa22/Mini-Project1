@@ -1,5 +1,5 @@
 from settings import *
-from login import *
+from login_screen import *
 
 
 def connect(path):
@@ -19,7 +19,12 @@ def main():
     path = "./" + dbString
     connect(path)
 
-    loginType = login(connection, cursor)
+    while True:
+        selection = main_screen(connection, cursor)
+        if selection == 1:  # Login
+            loginType = login(connection, cursor)
+        else:  # Sign up
+            sign_up(connection, cursor)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,3 @@
+admin|admin|admin
+junye|John Yu|junye
+zt8|Zheng Tang|zt8

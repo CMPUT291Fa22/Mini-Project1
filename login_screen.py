@@ -1,6 +1,26 @@
 from settings import *
 
 #
+# This function handles the main UI. The main UI prompts the user to login or sign up
+# Input: connection, cursor
+# Output: 1 to login, 2 to sign up
+#
+def main_screen(connection, cursor):
+    while True:
+        print(
+            """Press 1 to login
+Press 2 to sign up"""
+        )
+        selection = input()
+        if selection == "1":
+            return 1
+        elif selection == "2":
+            return 2
+        else:
+            pass
+
+
+#
 # This function gets the login credentials
 # Input: connection, cursor
 # Output: an integer
@@ -49,10 +69,8 @@ def login(connection, cursor):
     if userLoginBool:
         if artistLoginBool:
             print(
-                """
-Press 1 to login as a user
-Press 2 to login as an artist
-"""
+                """Press 1 to login as a user
+Press 2 to login as an artist"""
             )
             while True:
                 selection = input()
@@ -75,4 +93,38 @@ Press 2 to login as an artist
             # Log in credentials do not exist in the database
             return 0
 
-    connection.commit()
+
+#
+# This function handles user sign up
+# Input: connection, cursor
+# Output: None
+#
+def sign_up(connection, cursor):
+    while True:
+        username = input("Username: ")
+        name = input("Name: ")
+        password = input("Password: ")
+
+        username = (
+            username.lower()
+        )  # Username is not case sensitive. All usernames will be stored in lowercase on database.
+
+        cursor.execute(
+            """
+            SELECT uid
+            FROM users
+            WHERE uid == ?;""",
+            (username,),
+        )
+        userRows = cursor.fetchall()
+        if len(userRows) > 0:
+            print("Username already exists. Please try again.")
+        else:
+            cursor.execute(
+                """
+                INSERT INTO users(uid, name, pwd) VALUES (
+                    ?, ?, ?);""",
+                (username, name, password),
+            )
+            connection.commit()
+            return
