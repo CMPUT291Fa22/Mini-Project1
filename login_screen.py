@@ -23,7 +23,7 @@ Press 2 to sign up"""
 #
 # This function gets the login credentials
 # Input: connection, cursor
-# Output: an integer
+# Output: an integer and the username
 #         0 meaning credentials do not exist
 #         1 meaning to log in as a user
 #         2 meaning to log in as an artist
@@ -76,28 +76,28 @@ Press 2 to login as an artist"""
                 selection = input()
                 if selection == "1":
                     # Logging in as a user
-                    return 1
+                    return 1, username
                 elif selection == "2":
                     # Loggin in as an artist
-                    return 2
+                    return 2, username
                 else:
                     print("You must type either 1 or 2")
         else:
             # Logging in as a user
-            return 1
+            return 1, username
     else:
         if artistLoginBool:
             # Logging in as an artist
-            return 2
+            return 2, username
         else:
             # Log in credentials do not exist in the database
-            return 0
+            return 0, username
 
 
 #
 # This function handles user sign up
 # Input: connection, cursor
-# Output: None
+# Output: username
 #
 def sign_up(connection, cursor):
     while True:
@@ -127,4 +127,4 @@ def sign_up(connection, cursor):
                 (username, name, password),
             )
             connection.commit()
-            return
+            return username

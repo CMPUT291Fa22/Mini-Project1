@@ -23,19 +23,21 @@ def main():
     while True:
         selection = main_screen(connection, cursor)
         if selection == 1:  # Login
-            loginType = login(connection, cursor)
+            loginType, username = login(connection, cursor)
             if loginType == 0:
                 print("Cannot find account matching these credentials.")
             elif loginType == 1:
                 # Invoke the system functionalities UI
-                sys_func(connection, cursor)
-                print(sysOperationType)
+                sys_func(connection, cursor, username)
             else:  # loginType == 2:
                 # Invoke the artist actions UI
                 pass
         else:  # Sign up
-            sign_up(connection, cursor)
-            sys_func(connection, cursor)
+            username = sign_up(connection, cursor)
+            sys_func(connection, cursor, username)
+
+    connection.commit()
+    connection.close()
 
 
 if __name__ == "__main__":

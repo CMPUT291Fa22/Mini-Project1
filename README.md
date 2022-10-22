@@ -5,7 +5,9 @@ This is our group solution for mini-project 1
 # Group Members
 
 John Yu | junye
+
 Zheng Tang | zt8
+
 Jugal Patel | jugal2
 
 # References
