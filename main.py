@@ -1,11 +1,5 @@
-import sqlite3
-import time
-import getpass
-
-from sympy import false, true
-
-connection = None
-cursor = None
+from settings import *
+from login import *
 
 
 def connect(path):
@@ -18,49 +12,6 @@ def connect(path):
     return
 
 
-def login():
-    global connection, cursor
-
-    username = input("Username: ")
-    password = getpass.getpass("Password: ")
-
-    username = username.lower()
-    userLoginBool = false
-    artistLoginBool = false
-
-    # Check that credentials are in the users table
-    cursor.execute(
-        """
-        SELECT uid, pwd
-        FROM users
-        WHERE uid == ?
-        AND pwd == ?;""",
-        (
-            username,
-            password,
-        ),
-    )
-    userRows = cursor.fetchall()
-    if len(userRows) > 0:
-        userLoginBool = true
-
-    # Check that credentials are in the artists table
-    cursor.execute(
-        """
-        SELECT aid, pwd
-        FROM artists
-        WHERE aid == ?
-        AND pwd == ?;""",
-        (username, password),
-    )
-    artistRows = cursor.fetchall()
-    if len(artistRows) > 0:
-        artistLoginBool = true
-
-    print(userLoginBool)
-    print(artistLoginBool)
-
-
 def main():
     global connection, cursor
 
@@ -68,7 +19,7 @@ def main():
     path = "./" + dbString
     connect(path)
 
-    login()
+    loginType = login(connection, cursor)
 
 
 if __name__ == "__main__":
