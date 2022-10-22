@@ -39,7 +39,6 @@ def login(connection, cursor):
     username = input("Username: ")
     password = getpass.getpass("Password: ")
 
-    username = username.lower()
     userLoginBool = False
     artistLoginBool = False
 
@@ -48,7 +47,7 @@ def login(connection, cursor):
         """
         SELECT uid, pwd
         FROM users
-        WHERE uid == ?
+        WHERE compare(uid, ?)
         AND pwd == ?;""",
         (
             username,
@@ -64,7 +63,7 @@ def login(connection, cursor):
         """
         SELECT aid, pwd
         FROM artists
-        WHERE aid == ?
+        WHERE compare(aid, ?)
         AND pwd == ?;""",
         (username, password),
     )
@@ -114,10 +113,6 @@ def sign_up(connection, cursor):
         username = input("Username: ")
         name = input("Name: ")
         password = input("Password: ")
-
-        username = (
-            username.lower()
-        )  # Username is not case sensitive. All usernames will be stored in lowercase on database.
 
         cursor.execute(
             """

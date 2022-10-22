@@ -3,6 +3,10 @@ from login_screen import *
 from system_functionality import *
 
 
+def compare(a, b):
+    return a.lower() == b.lower()
+
+
 def connect(path):
     global connection, cursor
 
@@ -10,6 +14,8 @@ def connect(path):
     cursor = connection.cursor()
     cursor.execute(" PRAGMA foreign_keys=ON; ")
     connection.commit()
+
+    connection.create_function("compare", 2, compare)
     return
 
 

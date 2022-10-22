@@ -119,7 +119,6 @@ def start_new_session(connection, cursor, username):
 def search_for_song_and_playlist(connection, cursor):
     print("Retrieve songs and playlists by keywords. Separate keywords using space.")
     keywords = input().split()
-    print(keywords)
 
 
 #
