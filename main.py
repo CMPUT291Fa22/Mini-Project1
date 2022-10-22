@@ -15,6 +15,13 @@ def connect(path):
     return
 
 
+def login():
+    global connection, cursor
+
+    username = input("Username: ")
+    password = input("Password: ")
+
+
 def main():
     global connection, cursor
 
