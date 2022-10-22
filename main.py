@@ -21,6 +21,35 @@ def login():
     username = input("Username: ")
     password = input("Password: ")
 
+    username = username.lower()
+
+    # Check that credentials are in the users table
+    cursor.execute(
+        """
+        SELECT uid, pwd
+        FROM users
+        WHERE uid == ?
+        AND pwd == ?;""",
+        (
+            username,
+            password,
+        ),
+    )
+    rows = cursor.fetchall()
+    print(len(rows))
+
+    # Check that credentials are in the artists table
+    cursor.execute(
+        """
+        SELECT aid, pwd
+        FROM artists
+        WHERE aid == ?
+        AND pwd == ?;""",
+        (username, password),
+    )
+    rows = cursor.fetchall()
+    print(len(rows))
+
 
 def main():
     global connection, cursor
@@ -28,6 +57,8 @@ def main():
     dbString = input("Database Name: ")
     path = "./" + dbString
     connect(path)
+
+    login()
 
 
 if __name__ == "__main__":

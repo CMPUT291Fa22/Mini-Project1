@@ -12,6 +12,7 @@ PRAGMA foreign_keys = ON;
 create table users (
   uid		char(4),
   name		text,
+  pwd       text,
   primary key (uid)
 );
 create table songs (
@@ -57,6 +58,7 @@ create table artists (
   aid		char(4),
   name		text,
   nationality	text,
+  pwd       text,
   primary key (aid)
 );
 create table perform (
@@ -66,3 +68,7 @@ create table perform (
   foreign key (aid) references artists,
   foreign key (sid) references songs
 );
+
+insert into users values ("admin", "admin", "admin");
+
+insert into artists values ("a0", "Justin Bieber", "Canadian", "a0");
