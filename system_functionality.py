@@ -17,7 +17,8 @@ def sys_func(connection, cursor, username):
         elif sys_func_op == 4:
             end_current_session(connection, cursor, username)
         elif sys_func_op == 5:
-            pass
+            logout(connection, cursor, username)
+            return
         elif sys_func_op == 6:
             pass
         else:
@@ -127,3 +128,22 @@ def end_current_session(connection, cursor, username):
     )
     connection.commit()
     input("Session ended successfully. Press enter to continue.")
+
+
+#
+# This function logs out the current user
+# Input: connection, cursor, username
+# Output: None
+#
+def logout(connection, cursor, username):
+    current_date = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Close all active sessions
+    cursor.execute(
+        """
+        UPDATE sessions SET end = ?
+        WHERE uid == ?
+        AND end IS NULL;""",
+        (current_date, username),
+    )
+    connection.commit()
