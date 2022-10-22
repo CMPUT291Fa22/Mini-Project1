@@ -1,5 +1,6 @@
 import sqlite3
 import time
+import getpass
 
 connection = None
 cursor = None
@@ -19,7 +20,7 @@ def login():
     global connection, cursor
 
     username = input("Username: ")
-    password = input("Password: ")
+    password = getpass.getpass("Password: ")
 
     username = username.lower()
 
@@ -35,8 +36,7 @@ def login():
             password,
         ),
     )
-    rows = cursor.fetchall()
-    print(len(rows))
+    userRows = cursor.fetchall()
 
     # Check that credentials are in the artists table
     cursor.execute(
@@ -47,8 +47,7 @@ def login():
         AND pwd == ?;""",
         (username, password),
     )
-    rows = cursor.fetchall()
-    print(len(rows))
+    artistRows = cursor.fetchall()
 
 
 def main():

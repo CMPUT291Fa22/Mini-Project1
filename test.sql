@@ -69,6 +69,21 @@ create table perform (
   foreign key (sid) references songs
 );
 
+/*
+    This is a set of test cases for the login screen.
+*/
 insert into users values ("admin", "admin", "admin");
 
 insert into artists values ("a0", "Justin Bieber", "Canadian", "a0");
+
+/*
+    This is a set of test cases for the system functionalities.
+*/
+
+/*
+    This is a set of test cases for the song actions.
+*/
+
+/*
+    This is a set of test cases for the artist actions.
+*/
