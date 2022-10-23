@@ -89,6 +89,18 @@ insert into songs values (10, "Chicago Freestyle", 3);
 insert into songs values (11, "Toosie Slide", 3);
 insert into songs values (12, "Wants and Needs", 3);
 insert into songs values (13, "Nonstop", 3);
+insert into songs values (14, "My Heart Will Go On", 3);
+insert into songs values (15, "It's All Coming Back To Me Now", 3);
+insert into songs values (16, "To Love You More", 3);
+insert into songs values (17, "I'm Alive", 3);
+insert into songs values (18, "All By Myself", 3);
+insert into songs values (19, "The Power Of Love", 3);
+insert into songs values (20, "That's The Way It Is", 3);
+insert into songs values (21, "Just Walk Away", 3);
+insert into songs values (22, "I Surrender", 3);
+insert into songs values (23, "I Love You", 3);
+insert into songs values (24, "Senorita", 3);
+insert into songs values (25, "I Know What You Did Last Summer", 3);
 
 insert into playlists values (0, "happy", "admin");
 insert into playlists values (1, "sad", "admin");
@@ -131,6 +143,7 @@ insert into artists values ("a15", "Lady Gaga", "American", "a15");
 insert into artists values ("a16", "Beyonce", "American", "a16");
 insert into artists values ("a17", "Demi Lovato", "American", "a17");
 insert into artists values ("a18", "Britney Spears", "American", "a18");
+insert into artists values ("a19", "Camila Cabello", "American", "a19");
 
 insert into perform values ("a0", 0);
 insert into perform values ("a0", 1);
@@ -146,6 +159,20 @@ insert into perform values ("a1", 10);
 insert into perform values ("a1", 11);
 insert into perform values ("a1", 12);
 insert into perform values ("a1", 13);
+insert into perform values ("a2", 14);
+insert into perform values ("a2", 15);
+insert into perform values ("a2", 16);
+insert into perform values ("a2", 17);
+insert into perform values ("a2", 18);
+insert into perform values ("a2", 19);
+insert into perform values ("a2", 20);
+insert into perform values ("a2", 21);
+insert into perform values ("a2", 22);
+insert into perform values ("a2", 23);
+insert into perform values ("a7", 24);
+insert into perform values ("a19", 24);
+insert into perform values ("a7", 25);
+insert into perform values ("a19", 25);
 
 /*
     This is a set of test cases for the system functionalities.

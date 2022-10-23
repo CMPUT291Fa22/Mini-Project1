@@ -22,6 +22,24 @@ def match(a, b):
     return False
 
 
+#
+# This function returns the number of matching keywords that match artist name or song title
+# Input: a is a string, b is a string representing space-separated keywords
+# Output: an integer representing number of matches
+#
+def count_artist_match(name, title, b):
+    keywords = b.split()
+    i = 0
+    for key in keywords:
+        if key.lower() in name.lower():
+            i += 1
+            continue
+        if key.lower() in title.lower():
+            i += 1
+            continue
+    return i
+
+
 def connect(path):
     global connection, cursor
 
@@ -32,6 +50,7 @@ def connect(path):
 
     connection.create_function("compare", 2, compare)
     connection.create_function("match", 2, match)
+    connection.create_function("count_artist_match", 3, count_artist_match)
     return
 
 

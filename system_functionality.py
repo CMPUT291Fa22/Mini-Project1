@@ -4,9 +4,9 @@ keywords = []
 
 
 #
-# This function counts the number of keywords that match the title
-# Input: The title is a string. The keyList parameter is a list of strings.
-# Output: an integer
+# This function counts the number of keywords that match the title of a song or playlist
+# Input: Row is a tuple representing song or playlist information
+# Output: an integer representing number of matches
 #
 def countMatch(row):
     global keywords
@@ -34,9 +34,120 @@ def viewPlaylist(connection, cursor, pid):
         (pid,),
     )
     plRows = cursor.fetchall()
-    for row in plRows:
-        print("{}|{}|{}".format(row[0], row[1], row[2]))
-    input("Press ENTER to continue.")
+    # for i, row in enumerate(plRows):
+    #     print("{}: {}|{}|{}".format(i, row[0], row[1], row[2]))
+    # input("Press ENTER to continue.")
+
+    # Display query in paginated downward format
+    pivot = 0  # This is the starting index to display
+    numEntities = len(plRows)
+    while True:
+        os.system("cls")
+        pivot = 0 if pivot >= numEntities else pivot
+        if not pivot >= numEntities:
+            print("{}: {}|{}|{}".format(pivot, *plRows[pivot]))
+        if not pivot + 1 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 1, *plRows[pivot + 1]))
+        if not pivot + 2 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 2, *plRows[pivot + 2]))
+        if not pivot + 3 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 3, *plRows[pivot + 3]))
+        if not pivot + 4 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 4, *plRows[pivot + 4]))
+        print("###########################################################")
+        print("Type ENTER to exit.")
+        print("Type in the index position + ENTER to view song.")
+        print("Type space + ENTER to view next 5 entries.")
+        print("###########################################################")
+        cmd = input()
+        if cmd == "":
+            break
+        elif cmd == " ":
+            pivot += 5
+        else:
+            try:
+                index = int(cmd)
+                if index >= pivot and index < pivot + 5 and index < numEntities:
+                    # Song selection is valid
+                    print("Performing song action...")
+                    input()
+                    pass
+                else:
+                    # Song selection is invalid
+                    print("Invalid index. Press ENTER to continue.")
+                    input()
+            except Exception as e:
+                print("Exception Occurred. Press ENTER to continue.")
+                print(e)
+                input()
+
+
+#
+# This function is called when the user selects to view the artist
+# Input: connection, cursor, name is a string, nationality is a string
+# Output: None
+#
+def view_artist(connection, cursor, name, nationality):
+    os.system("cls")
+    cursor.execute(
+        """
+        SELECT artists.aid, songs.title, songs.duration
+        FROM artists, perform, songs
+        WHERE artists.aid = perform.aid
+        AND perform.sid = songs.sid
+        AND artists.name = ?
+        AND artists.nationality = ?;""",
+        (
+            name,
+            nationality,
+        ),
+    )
+    a_rows = cursor.fetchall()
+    # for i, row in enumerate(a_rows):
+    #     print("{}: {}|{}|{}".format(i, row[0], row[1], row[2]))
+    # input("Press ENTER to continue.")
+
+    pivot = 0  # This is the starting index to display
+    numEntities = len(a_rows)
+    while True:
+        os.system("cls")
+        pivot = 0 if pivot >= numEntities else pivot
+        if not pivot >= numEntities:
+            print("{}: {}|{}|{}".format(pivot, *a_rows[pivot]))
+        if not pivot + 1 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 1, *a_rows[pivot + 1]))
+        if not pivot + 2 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 2, *a_rows[pivot + 2]))
+        if not pivot + 3 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 3, *a_rows[pivot + 3]))
+        if not pivot + 4 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 4, *a_rows[pivot + 4]))
+        print("###########################################################")
+        print("Type ENTER to exit.")
+        print("Type in the index position + ENTER to view song.")
+        print("Type space + ENTER to view next 5 entries.")
+        print("###########################################################")
+        cmd = input()
+        if cmd == "":
+            break
+        elif cmd == " ":
+            pivot += 5
+        else:
+            try:
+                index = int(cmd)
+                if index >= pivot and index < pivot + 5 and index < numEntities:
+                    # Song selection is valid
+                    print("Performing song action...")
+                    input()
+                    pass
+                else:
+                    # Song selection is invalid
+                    print("Invalid index. Press ENTER to continue.")
+                    input()
+            except Exception as e:
+                print("Exception Occurred. Press ENTER to continue.")
+                print(e)
+                input()
 
 
 #
@@ -52,7 +163,7 @@ def sys_func(connection, cursor, username):
         elif sys_func_op == 2:
             search_for_song_and_playlist(connection, cursor)
         elif sys_func_op == 3:
-            pass
+            search_for_artists(connection, cursor)
         elif sys_func_op == 4:
             end_current_session(connection, cursor, username)
         elif sys_func_op == 5:
@@ -151,7 +262,7 @@ def start_new_session(connection, cursor, username):
 
 
 #
-# This function searches among songs and playlists
+# This function searches for songs and playlists
 # Input: connection, cursor
 # Output: None
 #
@@ -172,8 +283,6 @@ def search_for_song_and_playlist(connection, cursor):
         )
     )
     song_rows = cursor.fetchall()
-    # for row in song_rows:
-    #     print("{}|{}|{}|{}".format(row[0], row[1], row[2], row[3]))
 
     # Get all playlists that match list of keywords
     cursor.execute(
@@ -188,8 +297,6 @@ def search_for_song_and_playlist(connection, cursor):
         )
     )
     playlist_rows = cursor.fetchall()
-    # for row in playlist_rows:
-    #     print("{}|{}|{}|{}".format(row[0], row[1], row[2], row[3]))
 
     # Combine the songs and playlists
     songs_and_playlists_rows = []
@@ -231,9 +338,11 @@ def search_for_song_and_playlist(connection, cursor):
                     pivot + 4, *songs_and_playlists_rows[pivot + 4]
                 )
             )
-        print("Press ENTER to exit.")
+        print("###########################################################")
+        print("Type ENTER to exit.")
         print("Type in the index position + ENTER to view song/playlist.")
-        print("Press space to view next 5.")
+        print("Type space + ENTER to view next 5 entries.")
+        print("###########################################################")
         cmd = input()
         if cmd == "":
             break
@@ -255,8 +364,90 @@ def search_for_song_and_playlist(connection, cursor):
                     # Song/Playlist selection is invalid
                     print("Invalid index. Press ENTER to continue.")
                     input()
-            except:
-                print("Invalid input. Press ENTER to continue.")
+            except Exception as e:
+                print("Exception Occurred. Press ENTER to continue.")
+                print(e)
+                input()
+
+
+#
+# This function searches for artists
+# Input: connection, cursor
+# Output: None
+#
+def search_for_artists(connection, cursor):
+    global keywords
+
+    print(
+        "Retrieve artists from their name or song titles by keywords. Separate keywords using space."
+    )
+    keywords = input().split()
+
+    # Get all the artists that match list of keywords
+    cursor.execute(
+        """
+        SELECT artists.name, artists.nationality, COUNT(songs.sid)
+        FROM artists, perform, songs
+        WHERE artists.aid = perform.aid
+        AND perform.sid = songs.sid
+        AND artists.aid IN (
+            SELECT artists.aid
+            FROM artists, perform, songs
+            WHERE artists.aid = perform.aid
+            AND perform.sid = songs.sid
+            AND ({} OR {})
+        )
+        GROUP BY artists.name, artists.nationality
+        ORDER BY count_artist_match(artists.name, songs.title, '{}') DESC""".format(
+            " OR ".join(["match(artists.name, '{}')".format(kw) for kw in keywords]),
+            " OR ".join(["match(songs.title, '{}')".format(kw) for kw in keywords]),
+            " ".join(keywords),
+        )
+    )
+    artist_rows = cursor.fetchall()
+    # for row in artist_rows:
+    #     print("{}|{}|{}".format(row[0], row[1], row[2]))
+    # Display query in paginated downward format
+    pivot = 0  # This is the starting index to display
+    numEntities = len(artist_rows)
+    while True:
+        os.system("cls")
+        pivot = 0 if pivot >= numEntities else pivot
+        if not pivot >= numEntities:
+            print("{}: {}|{}|{}".format(pivot, *artist_rows[pivot]))
+        if not pivot + 1 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 1, *artist_rows[pivot + 1]))
+        if not pivot + 2 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 2, *artist_rows[pivot + 2]))
+        if not pivot + 3 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 3, *artist_rows[pivot + 3]))
+        if not pivot + 4 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 4, *artist_rows[pivot + 4]))
+        print("###########################################################")
+        print("Type ENTER to exit.")
+        print("Type in the index position + ENTER to view artist.")
+        print("Type space + ENTER to view next 5 entries.")
+        print("###########################################################")
+        cmd = input()
+        if cmd == "":
+            break
+        elif cmd == " ":
+            pivot += 5
+        else:
+            try:
+                index = int(cmd)
+                if index >= pivot and index < pivot + 5 and index < numEntities:
+                    # Artist selection is valid
+                    view_artist(
+                        connection, cursor, artist_rows[index][0], artist_rows[index][1]
+                    )
+                else:
+                    # Song/Playlist selection is invalid
+                    print("Invalid index. Press ENTER to continue.")
+                    input()
+            except Exception as e:
+                print("Exception Occurred. Press ENTER to continue.")
+                print(e)
                 input()
 
 
