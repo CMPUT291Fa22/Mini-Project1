@@ -1,5 +1,44 @@
 from settings import *
 
+keywords = []
+
+
+#
+# This function counts the number of keywords that match the title
+# Input: The title is a string. The keyList parameter is a list of strings.
+# Output: an integer
+#
+def countMatch(row):
+    global keywords
+    i = 0
+    for key in keywords:
+        if row[2].lower() == key.lower():
+            i += 1
+    return i
+
+
+#
+# This function is called when a user selects to view a playlist.
+# Input: connection, cursor
+# Output: None
+#
+def viewPlaylist(connection, cursor, pid):
+    os.system("cls")
+    cursor.execute(
+        """
+        SELECT songs.sid, songs.title, songs.duration
+        FROM playlists, plinclude, songs
+        WHERE playlists.pid = plinclude.pid
+        AND plinclude.sid = songs.sid
+        AND playlists.pid = ?""",
+        (pid,),
+    )
+    plRows = cursor.fetchall()
+    for row in plRows:
+        print("{}|{}|{}".format(row[0], row[1], row[2]))
+    input("Press ENTER to continue.")
+
+
 #
 # This function will continuously ask the user for system functionality operations.
 # Input: connection, cursor, username
@@ -76,7 +115,7 @@ def start_new_session(connection, cursor, username):
         """
         SELECT COUNT(*)
         FROM sessions
-        WHERE uid == ?
+        WHERE compare(uid, ?)
         AND end IS NULL;""",
         (username,),
     )
@@ -95,7 +134,7 @@ def start_new_session(connection, cursor, username):
         """
         SELECT COUNT(sno)
         FROM sessions
-        WHERE uid == ?;""",
+        WHERE compare(uid, ?);""",
         (username,),
     )
     sno = cursor.fetchone()[0]  # The sno will just be the current number of sessions
@@ -117,8 +156,108 @@ def start_new_session(connection, cursor, username):
 # Output: None
 #
 def search_for_song_and_playlist(connection, cursor):
+    global keywords  # This list needs to be global because the countMatch function needs to use this list to
+    # sort songs and playlists by number of matches
+
     print("Retrieve songs and playlists by keywords. Separate keywords using space.")
     keywords = input().split()
+
+    # Get all the songs that match list of keywords
+    cursor.execute(
+        """
+        SELECT "song", sid, title, duration
+        FROM songs
+        WHERE {};""".format(
+            " OR ".join(["match(title, '{}')".format(kw) for kw in keywords])
+        )
+    )
+    song_rows = cursor.fetchall()
+    # for row in song_rows:
+    #     print("{}|{}|{}|{}".format(row[0], row[1], row[2], row[3]))
+
+    # Get all playlists that match list of keywords
+    cursor.execute(
+        """
+        SELECT "playlist", playlists.pid, playlists.title, SUM(songs.duration)
+        FROM playlists, plinclude, songs
+        WHERE playlists.pid = plinclude.pid
+        AND plinclude.sid = songs.sid
+        AND ({})
+        GROUP BY playlists.pid""".format(
+            " OR ".join(["match(playlists.title, '{}')".format(kw) for kw in keywords])
+        )
+    )
+    playlist_rows = cursor.fetchall()
+    # for row in playlist_rows:
+    #     print("{}|{}|{}|{}".format(row[0], row[1], row[2], row[3]))
+
+    # Combine the songs and playlists
+    songs_and_playlists_rows = []
+    for song in song_rows:
+        songs_and_playlists_rows.append(song)
+    for playlist in playlist_rows:
+        songs_and_playlists_rows.append(playlist)
+    songs_and_playlists_rows.sort(reverse=True, key=countMatch)
+
+    # Display query in paginated downward format
+    pivot = 0  # This is the starting index to display
+    numEntities = len(songs_and_playlists_rows)
+    while True:
+        os.system("cls")
+        pivot = 0 if pivot >= numEntities else pivot
+        if not pivot >= numEntities:
+            print("{}: {}|{}|{}|{}".format(pivot, *songs_and_playlists_rows[pivot]))
+        if not pivot + 1 >= numEntities:
+            print(
+                "{}: {}|{}|{}|{}".format(
+                    pivot + 1, *songs_and_playlists_rows[pivot + 1]
+                )
+            )
+        if not pivot + 2 >= numEntities:
+            print(
+                "{}: {}|{}|{}|{}".format(
+                    pivot + 2, *songs_and_playlists_rows[pivot + 2]
+                )
+            )
+        if not pivot + 3 >= numEntities:
+            print(
+                "{}: {}|{}|{}|{}".format(
+                    pivot + 3, *songs_and_playlists_rows[pivot + 3]
+                )
+            )
+        if not pivot + 4 >= numEntities:
+            print(
+                "{}: {}|{}|{}|{}".format(
+                    pivot + 4, *songs_and_playlists_rows[pivot + 4]
+                )
+            )
+        print("Press ENTER to exit.")
+        print("Type in the index position + ENTER to view song/playlist.")
+        print("Press space to view next 5.")
+        cmd = input()
+        if cmd == "":
+            break
+        elif cmd == " ":
+            pivot += 5
+        else:
+            try:
+                index = int(cmd)
+                if index >= pivot and index < pivot + 5 and index < numEntities:
+                    # Song/Playlist selection is valid
+                    if songs_and_playlists_rows[index][0] == "song":
+                        # Perform a song action
+                        pass
+                    else:
+                        viewPlaylist(
+                            connection, cursor, songs_and_playlists_rows[index][1]
+                        )
+                else:
+                    # Song/Playlist selection is invalid
+                    print("Invalid index. Press ENTER to continue.")
+                    input()
+            except:
+                print("Invalid input. Press ENTER to continue.")
+                input()
 
 
 #
@@ -132,7 +271,7 @@ def end_current_session(connection, cursor, username):
     cursor.execute(
         """
         UPDATE sessions SET end = ?
-        WHERE uid == ?
+        WHERE compare(uid, ?)
         AND end IS NULL;""",
         (current_date, username),
     )
@@ -152,7 +291,7 @@ def logout(connection, cursor, username):
     cursor.execute(
         """
         UPDATE sessions SET end = ?
-        WHERE uid == ?
+        WHERE compare(uid, ?)
         AND end IS NULL;""",
         (current_date, username),
     )
@@ -171,7 +310,7 @@ def exit_program(connection, cursor, username):
     cursor.execute(
         """
         UPDATE sessions SET end = ?
-        WHERE uid == ?
+        WHERE compare(uid, ?)
         AND end IS NULL;""",
         (current_date, username),
     )

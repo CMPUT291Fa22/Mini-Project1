@@ -85,7 +85,7 @@ def login(connection, cursor):
                     # Logging in as a user
                     return 1, username
                 elif selection == "2":
-                    # Loggin in as an artist
+                    # Logging in as an artist
                     return 2, username
                 else:
                     print("You must type either 1 or 2")
@@ -118,7 +118,7 @@ def sign_up(connection, cursor):
             """
             SELECT uid
             FROM users
-            WHERE uid == ?;""",
+            WHERE compare(uid, ?);""",
             (username,),
         )
         userRows = cursor.fetchall()

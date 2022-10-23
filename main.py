@@ -2,9 +2,24 @@ from settings import *
 from login_screen import *
 from system_functionality import *
 
-
+#
+# This is a user-defined function that compares two strings non case-sensitively
+# Input: two strings a and b
+# Output: a boolean
+#
 def compare(a, b):
     return a.lower() == b.lower()
+
+
+#
+# This is a user-defined function that checks for keyword matches
+# Inputs: a and b are strings
+# Outputs: a boolean
+#
+def match(a, b):
+    if b.lower() in a.lower():
+        return True
+    return False
 
 
 def connect(path):
@@ -16,6 +31,7 @@ def connect(path):
     connection.commit()
 
     connection.create_function("compare", 2, compare)
+    connection.create_function("match", 2, match)
     return
 
 
