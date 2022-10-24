@@ -124,6 +124,7 @@ def sign_up(connection, cursor):
         userRows = cursor.fetchall()
         if len(userRows) > 0:
             print("Username already exists. Please try again.")
+            input("Press ENTER to continue: ")
         else:
             cursor.execute(
                 """

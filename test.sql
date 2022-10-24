@@ -69,11 +69,9 @@ create table perform (
   foreign key (sid) references songs
 );
 
-/*
-    This is a set of test cases for the login screen.
-*/
 insert into users values ("admin", "admin", "admin");
 insert into users values ("junye", "John Yu", "junye");
+insert into users values ("test", "test", NULL);
 
 insert into songs values (0, "Baby", 2);
 insert into songs values (1, "Yummy", 4);
@@ -101,12 +99,25 @@ insert into songs values (22, "I Surrender", 3);
 insert into songs values (23, "I Love You", 3);
 insert into songs values (24, "Senorita", 3);
 insert into songs values (25, "I Know What You Did Last Summer", 3);
+insert into songs values (26, NULL, 3);
+insert into songs values (27, NULL, 3);
+insert into songs values (28, NULL, 3);
+insert into songs values (29, "Test1", 3);
+insert into songs values (30, "Test2", 3);
+insert into songs values (31, "Test3", 3);
+
+insert into sessions values ("admin", 0, "2022-10-23 16:01:41", "2022-10-23 17:26:32");
+insert into sessions values ("admin", 1, "2022-10-23 17:27:27", "2022-10-23 17:28:28");
+insert into sessions values ("admin", 2, "2022-10-23 17:36:36", "2022-10-23 17:48:48");
 
 insert into playlists values (0, "happy", "admin");
 insert into playlists values (1, "sad", "admin");
 insert into playlists values (2, "mad", "admin");
 insert into playlists values (3, "scared", "admin");
 insert into playlists values (4, "disgust", "admin");
+insert into playlists values (5, NULL, "admin");
+insert into playlists values (6, NULL, "admin");
+insert into playlists values (7, NULL, "admin");
 
 insert into plinclude values (0, 0, NULL);
 insert into plinclude values (0, 1, NULL);
@@ -144,6 +155,10 @@ insert into artists values ("a16", "Beyonce", "American", "a16");
 insert into artists values ("a17", "Demi Lovato", "American", "a17");
 insert into artists values ("a18", "Britney Spears", "American", "a18");
 insert into artists values ("a19", "Camila Cabello", "American", "a19");
+insert into artists values ("a20", NULL, NULL, "a20");
+insert into artists values ("a21", NULL, NULL, "a21");
+insert into artists values ("a22", NULL, NULL, "a22");
+insert into artists values ("a23", "Test1", NULL, "a23");
 
 insert into perform values ("a0", 0);
 insert into perform values ("a0", 1);
@@ -173,15 +188,6 @@ insert into perform values ("a7", 24);
 insert into perform values ("a19", 24);
 insert into perform values ("a7", 25);
 insert into perform values ("a19", 25);
-
-/*
-    This is a set of test cases for the system functionalities.
-*/
-
-/*
-    This is a set of test cases for the song actions.
-*/
-
-/*
-    This is a set of test cases for the artist actions.
-*/
+insert into perform values ("a20", 29);
+insert into perform values ("a23", 26);
+insert into perform values ("a20", 26);

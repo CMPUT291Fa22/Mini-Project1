@@ -17,6 +17,10 @@ def compare(a, b):
 # Outputs: a boolean
 #
 def match(a, b):
+    if a is None:
+        return False
+    if b is None:
+        return False
     if b.lower() in a.lower():
         return True
     return False
@@ -68,6 +72,7 @@ def main():
             loginType, username = login(connection, cursor)
             if loginType == 0:
                 print("Cannot find account matching these credentials.")
+                input("Press ENTER to continue: ")
             elif loginType == 1:
                 # Invoke the system functionalities UI
                 sys_func(connection, cursor, username)

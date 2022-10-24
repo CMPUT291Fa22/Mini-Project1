@@ -243,12 +243,16 @@ def start_new_session(connection, cursor, username):
     # Create a unique session number (sno)
     cursor.execute(
         """
-        SELECT COUNT(sno)
+        SELECT sno
         FROM sessions
         WHERE compare(uid, ?);""",
         (username,),
     )
-    sno = cursor.fetchone()[0]  # The sno will just be the current number of sessions
+    user_sessions = cursor.fetchall()
+    user_sessions = [row[0] for row in user_sessions]
+    sno = 0
+    while sno in user_sessions:
+        sno = random.randint(0, 10 ** 9)
 
     # Add a new session
     cursor.execute(
@@ -397,6 +401,8 @@ def search_for_artists(connection, cursor):
             AND perform.sid = songs.sid
             AND ({} OR {})
         )
+        AND artists.name IS NOT NULL
+        AND songs.title IS NOT NULL
         GROUP BY artists.name, artists.nationality
         ORDER BY count_artist_match(artists.name, songs.title, '{}') DESC""".format(
             " OR ".join(["match(artists.name, '{}')".format(kw) for kw in keywords]),
