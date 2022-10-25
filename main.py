@@ -1,6 +1,7 @@
 from settings import *
 from login_screen import *
 from system_functionality import *
+from artist import *
 
 #
 # This is a user-defined function that compares two strings non case-sensitively
@@ -78,7 +79,7 @@ def main():
                 sys_func(connection, cursor, username)
             else:  # loginType == 2:
                 # Invoke the artist actions UI
-                pass
+                Artists(connection, cursor, username)
         elif selection == 2:  # Sign up
             username = sign_up(connection, cursor)
             sys_func(connection, cursor, username)
