@@ -447,7 +447,7 @@ insert into listen values ('u11', 24, 43, 102.2);
 insert into listen values ('u11', 24, 9, 9);
 insert into listen values ('u11', 24, 8, 14.5);
 insert into listen values ('u11', 24, 22, 22);
-insert into listen values ('u38', 24, 19, 6);
+insert into listen values ('u38', 24, 19, NULL);
 insert into listen values ('u38', 24, 33, 19.3);
 insert into listen values ('u38', 24, 2, 10.5);
 insert into listen values ('u38', 24, 8, 20.4);
