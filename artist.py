@@ -95,13 +95,13 @@ def rank(connection, cursor, username):
     topplaylist = cursor.fetchall()
     cursor.execute(
         """
-        SELECT listen.uid, sum(listen.cnt*songs.duration)
-        FROM listen, artists, perform, songs
+        SELECT listen.uid, users.name
+        FROM listen, artists, perform, songs, users
         WHERE artists.aid = ?
         AND artists.aid = perform.aid
         AND perform.sid = listen.sid
-        AND perform.sid = songs.sid
-        AND songs.sid = listen.sid
+        AND listen.sid = songs.sid
+        AND listen.uid = users.uid
         GROUP BY listen.uid
         ORDER BY sum(listen.cnt*songs.duration) DESC LIMIT 3;
         """,
