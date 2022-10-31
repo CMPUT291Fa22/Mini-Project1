@@ -14,7 +14,11 @@ def song_action(connection, cursor, username, sid):
         elif song_action_op == 2:  # See more information about song
             view_song_info(connection, cursor, username, sid)
         elif song_action_op == 3:  # Add song to playlist
-            pass
+            choice = add_to_playlist_ui()
+            if choice == 1:  # Add to existing playlist
+                add_to_existing_playlist(connection, cursor, username, sid)
+            else:  # Create a new playlist
+                create_new_playlist(connection, cursor, username, sid)
         elif song_action_op == 4:
             return
         else:
@@ -181,5 +185,140 @@ def view_song_info(connection, cursor, username, sid):
     input("Press ENTER to continue!")
 
 
-def add_to_playlist(connection, cursor, username, sid):
-    pass
+#
+# This function continuously asks the user whether to add to existing playlist or create a new playlist
+# Input: None
+# Output: an integer
+#         1 = Add to existing playlist
+#         2 = Create new playlist
+#
+def add_to_playlist_ui():
+    while True:
+        os.system("cls")
+        print(
+            """(1) Add to existing playlist
+(2) Create new playlist"""
+        )
+        choice = input()
+        if choice == "1":
+            return 1
+        elif choice == "2":
+            return 2
+        else:
+            input("Invalid input. Press ENTER to try again.")
+
+
+#
+# This function adds a song to an existing playlist
+# Input: connection, cursor, username, sid
+# Output: None
+#
+def add_to_existing_playlist(connection, cursor, username, sid):
+    cursor.execute(
+        """
+        SELECT *
+        FROM playlists
+        WHERE uid = ?
+        AND NOT EXISTS (
+            SELECT *
+            FROM plinclude
+            WHERE playlists.pid = plinclude.pid
+            AND plinclude.sid = ?
+        );""",
+        (username, sid),
+    )
+    playlist_list = cursor.fetchall()
+    pivot = 0  # This is the starting index to display
+    numEntities = len(playlist_list)
+    while True:
+        os.system("cls")
+        pivot = 0 if pivot >= numEntities else pivot
+        if not pivot >= numEntities:
+            print("{}: {}|{}|{}".format(pivot, *playlist_list[pivot]))
+        if not pivot + 1 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 1, *playlist_list[pivot + 1]))
+        if not pivot + 2 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 2, *playlist_list[pivot + 2]))
+        if not pivot + 3 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 3, *playlist_list[pivot + 3]))
+        if not pivot + 4 >= numEntities:
+            print("{}: {}|{}|{}".format(pivot + 4, *playlist_list[pivot + 4]))
+        print("###########################################################")
+        print("Type ENTER to exit.")
+        print("Type in the index position + ENTER to view song.")
+        print("Type space + ENTER to view next 5 entries.")
+        print("###########################################################")
+        cmd = input()
+        if cmd == "":
+            break
+        elif cmd == " ":
+            pivot += 5
+        else:
+            try:
+                index = int(cmd)
+                if index >= pivot and index < pivot + 5 and index < numEntities:
+                    # Playlist selection is valid
+                    pid = playlist_list[index][0]
+                    cursor.execute(
+                        """
+                        SELECT MAX(sorder)
+                        FROM plinclude
+                        WHERE pid = ?;""",
+                        (pid,),
+                    )
+                    sorder = cursor.fetchone()[0]
+                    sorder = 0 if sorder is None else sorder
+                    print(sorder)
+                    cursor.execute(
+                        """
+                        INSERT INTO plinclude VALUES (
+                            ?, ?, ?);""",
+                        (pid, sid, sorder),
+                    )
+                    connection.commit()
+                    input(
+                        "Successfully added song to playlist. Press ENTER to continue."
+                    )
+                else:
+                    # Song selection is invalid
+                    print("Invalid index. Press ENTER to continue.")
+                    input()
+            except Exception as e:
+                print("Exception Occurred. Press ENTER to continue.")
+                print(e)
+                input()
+
+
+#
+# This function adds a song to a new playlist
+# Input: connection, cursor, username, sid
+# Output: None
+#
+def create_new_playlist(connection, cursor, username, sid):
+    title = input("New Playlist Title: ")
+    # Get all the pids
+    cursor.execute(
+        """
+        SELECT pid
+        FROM playlists"""
+    )
+    pid_list = [row[0] for row in cursor.fetchall()]
+    pid = 0
+    while pid in pid_list:
+        pid = random.randint(0, 10 ** 9)
+    # Create a new playlist
+    cursor.execute(
+        """
+        INSERT INTO playlists VALUES (
+            ?, ?, ?);""",
+        (pid, title, username),
+    )
+    # Insert song into new playlist
+    cursor.execute(
+        """
+        INSERT INTO plinclude VALUES (
+            ?, ?, 0);""",
+        (pid, sid),
+    )
+    connection.commit()
+    input("Successfully created playlist and added song. Press ENTER to continue.")

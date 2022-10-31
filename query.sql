@@ -1,3 +1,3 @@
-SELECT *
-FROM listen
-WHERE uid = "admin"
+SELECT playlists.pid, plinclude.sid
+FROM playlists, plinclude
+WHERE playlists.pid = plinclude.pid
