@@ -62,7 +62,7 @@ def connect(path):
 def main():
     global connection, cursor
 
-    os.system("cls")
+    os.system("clear")
     dbString = input("Database Name: ")
     path = "./" + dbString
     connect(path)
@@ -84,7 +84,7 @@ def main():
             username = sign_up(connection, cursor)
             sys_func(connection, cursor, username)
         else:
-            os.system("cls")
+            os.system("clear")
             break
 
     connection.commit()

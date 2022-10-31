@@ -44,7 +44,7 @@ def addsongs(connection, cursor, username, title, duration):
                         (?, ?);""",
         (aid, uniquesid),
     )
-    os.system("cls")
+    os.system("clear")
     otherartist = input(
         "Any additional artists? If dose, input the additional artist's id, otherwise input 'no' to back to the menu\nYour input: "
     )
@@ -53,7 +53,7 @@ def addsongs(connection, cursor, username, title, duration):
             connection.commit()
             break
         elif otherartist.lower() == aid:
-            os.system("cls")
+            os.system("clear")
             otherartist = input(
                 "This is your id, please input other's id or 'no' to back to the menu\nYour input: "
             )
@@ -63,7 +63,7 @@ def addsongs(connection, cursor, username, title, duration):
             )
             check = cursor.fetchone()[0]
             if check == 0:
-                os.system("cls")
+                os.system("clear")
                 otherartist = input(
                     "This artist is not in our database, please input valid id or 'no' to back to the menu\nYour input: "
                 )
@@ -122,7 +122,7 @@ def Artists(connection, cursor, username):
     # global connection, cursor, username, title, duration
     aid = getaid(connection, cursor, username)
     while True:
-        os.system("cls")
+        os.system("clear")
         input1 = input(
             """Artist Operations:
 (1) Add a song
@@ -130,9 +130,9 @@ def Artists(connection, cursor, username):
 (3) Logout\n"""
         )
         if input1 == "1":
-            os.system("cls")
+            os.system("clear")
             title = input("Please input the song title \nTitle: ")
-            os.system("cls")
+            os.system("clear")
             duration = input("Please input the song duration \nDuration: ")
             cursor.execute(
                 """
@@ -150,7 +150,7 @@ def Artists(connection, cursor, username):
             ):  # check this song is already exist for the current artist or not
                 addsongs(connection, cursor, username, title, duration)
             else:
-                os.system("cls")
+                os.system("clear")
                 warning = input(
                     "You already have a song with same tile and duration, input 'c' to continue or any key to back to the menu\nYour input: "
                 )
@@ -159,7 +159,7 @@ def Artists(connection, cursor, username):
                 else:
                     pass
         elif input1 == "2":
-            os.system("cls")
+            os.system("clear")
             rank(connection, cursor, username)
         elif input1 == "3":  # logout. Logging
             return

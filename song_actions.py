@@ -35,7 +35,7 @@ def song_action(connection, cursor, username, sid):
 #         4 means to go back
 #
 def song_action_ui(connection, cursor):
-    os.system("cls")
+    os.system("clear")
     print(
         """(1) Listen to song
 (2) See more information about song
@@ -194,7 +194,7 @@ def view_song_info(connection, cursor, username, sid):
 #
 def add_to_playlist_ui():
     while True:
-        os.system("cls")
+        os.system("clear")
         print(
             """(1) Add to existing playlist
 (2) Create new playlist"""
@@ -231,7 +231,7 @@ def add_to_existing_playlist(connection, cursor, username, sid):
     pivot = 0  # This is the starting index to display
     numEntities = len(playlist_list)
     while True:
-        os.system("cls")
+        os.system("clear")
         pivot = 0 if pivot >= numEntities else pivot
         if not pivot >= numEntities:
             print("{}: {}|{}|{}".format(pivot, *playlist_list[pivot]))

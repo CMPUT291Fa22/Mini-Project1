@@ -24,7 +24,7 @@ def countMatch(row):
 # Output: None
 #
 def viewPlaylist(connection, cursor, pid, username):
-    os.system("cls")
+    os.system("clear")
     cursor.execute(
         """
         SELECT songs.sid, songs.title, songs.duration
@@ -39,7 +39,7 @@ def viewPlaylist(connection, cursor, pid, username):
     pivot = 0  # This is the starting index to display
     numEntities = len(plRows)
     while True:
-        os.system("cls")
+        os.system("clear")
         pivot = 0 if pivot >= numEntities else pivot
         if not pivot >= numEntities:
             print("{}: {}|{}|{}".format(pivot, *plRows[pivot]))
@@ -83,7 +83,7 @@ def viewPlaylist(connection, cursor, pid, username):
 # Output: None
 #
 def view_artist(connection, cursor, name, nationality, username):
-    os.system("cls")
+    os.system("clear")
     cursor.execute(
         """
         SELECT artists.aid, songs.title, songs.duration, songs.sid
@@ -102,7 +102,7 @@ def view_artist(connection, cursor, name, nationality, username):
     pivot = 0  # This is the starting index to display
     numEntities = len(a_rows)
     while True:
-        os.system("cls")
+        os.system("clear")
         pivot = 0 if pivot >= numEntities else pivot
         if not pivot >= numEntities:
             print("{}: {}|{}|{}".format(pivot, *a_rows[pivot]))
@@ -178,7 +178,7 @@ def sys_func(connection, cursor, username):
 #
 def sys_func_ui(connection, cursor):
     while True:
-        os.system("cls")
+        os.system("clear")
         print(
             """System Functionality Operations:
 (1) Start a session
@@ -305,7 +305,7 @@ def search_for_song_and_playlist(connection, cursor, username):
     pivot = 0  # This is the starting index to display
     numEntities = len(songs_and_playlists_rows)
     while True:
-        os.system("cls")
+        os.system("clear")
         pivot = 0 if pivot >= numEntities else pivot
         if not pivot >= numEntities:
             print("{}: {}|{}|{}|{}".format(pivot, *songs_and_playlists_rows[pivot]))
@@ -413,7 +413,7 @@ def search_for_artists(connection, cursor, username):
     pivot = 0  # This is the starting index to display
     numEntities = len(artist_rows)
     while True:
-        os.system("cls")
+        os.system("clear")
         pivot = 0 if pivot >= numEntities else pivot
         if not pivot >= numEntities:
             print("{}: {}|{}|{}".format(pivot, *artist_rows[pivot]))
@@ -514,5 +514,5 @@ def exit_program(connection, cursor, username):
     connection.commit()
     connection.close()
 
-    os.system("cls")
+    os.system("clear")
     quit()

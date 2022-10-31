@@ -7,7 +7,7 @@ from settings import *
 #
 def main_screen():
     while True:
-        os.system("cls")
+        os.system("clear")
         print("--- Main Screen ---")
         print(
             """Press 1 to login
@@ -34,7 +34,7 @@ Press 3 to exit"""
 #         2 meaning to log in as an artist
 #
 def login(connection, cursor):
-    os.system("cls")
+    os.system("clear")
     print("--- Login ---")
     username = input("Username: ")
     password = getpass.getpass("Password: ")
@@ -73,7 +73,7 @@ def login(connection, cursor):
 
     if userLoginBool:
         if artistLoginBool:
-            os.system("cls")
+            os.system("clear")
             print(
                 """How do you want to login:
 (1) User
@@ -108,7 +108,7 @@ def login(connection, cursor):
 #
 def sign_up(connection, cursor):
     while True:
-        os.system("cls")
+        os.system("clear")
         print("--- Sign up ---")
         username = input("Username: ")
         name = input("Name: ")
