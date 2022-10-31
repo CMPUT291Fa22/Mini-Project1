@@ -12,7 +12,7 @@ def song_action(connection, cursor, username, sid):
         if song_action_op == 1:  # Listen to song
             listen_to_song(connection, cursor, username, sid)
         elif song_action_op == 2:  # See more information about song
-            pass
+            view_song_info(connection, cursor, username, sid)
         elif song_action_op == 3:  # Add song to playlist
             pass
         elif song_action_op == 4:
@@ -129,3 +129,57 @@ def listen_to_song(connection, cursor, username, sid):
             (username, active_sno, sid),
         )
         connection.commit()
+
+
+#
+# This function displays more information about a song according to the project specifications.
+# Input: connection, cursor, username, sid
+# Output: None
+#
+def view_song_info(connection, cursor, username, sid):
+    # Get all performing artists
+    cursor.execute(
+        """
+        SELECT artists.name
+        FROM perform, artists
+        WHERE perform.sid = ?
+        AND perform.aid = artists.aid;""",
+        (sid,),
+    )
+    performing_artists_list = cursor.fetchall()
+    performing_artists_list = [row[0] for row in performing_artists_list]
+    performing_artists_list = ", ".join(performing_artists_list)
+
+    # Get all playlists the song is in
+    cursor.execute(
+        """
+        SELECT playlists.title
+        FROM plinclude, playlists
+        WHERE plinclude.sid = ?
+        AND plinclude.pid = playlists.pid;""",
+        (sid,),
+    )
+    playlists_list = cursor.fetchall()
+    playlists_list = [row[0] for row in playlists_list]
+    playlists_list = ", ".join(playlists_list)
+
+    # Get the rest of the song info
+    cursor.execute(
+        """
+        SELECT *
+        FROM songs
+        WHERE sid = ?;""",
+        (sid,),
+    )
+    song_info = cursor.fetchone()
+
+    print("Performing Artists: {}".format(performing_artists_list))
+    print("ID: {}".format(song_info[0]))
+    print("Title: {}".format(song_info[1]))
+    print("Duration: {}".format(song_info[2]))
+    print("Playlists: {}".format(playlists_list))
+    input("Press ENTER to continue!")
+
+
+def add_to_playlist(connection, cursor, username, sid):
+    pass
