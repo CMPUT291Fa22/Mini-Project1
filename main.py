@@ -68,7 +68,7 @@ def main():
     connect(path)
 
     while True:
-        selection = main_screen(connection, cursor)
+        selection = main_screen()
         if selection == 1:  # Login
             loginType, username = login(connection, cursor)
             if loginType == 0:

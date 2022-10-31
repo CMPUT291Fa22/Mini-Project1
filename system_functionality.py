@@ -1,4 +1,5 @@
 from settings import *
+from song_actions import *
 
 keywords = []
 
@@ -22,7 +23,7 @@ def countMatch(row):
 # Input: connection, cursor
 # Output: None
 #
-def viewPlaylist(connection, cursor, pid):
+def viewPlaylist(connection, cursor, pid, username):
     os.system("cls")
     cursor.execute(
         """
@@ -34,10 +35,6 @@ def viewPlaylist(connection, cursor, pid):
         (pid,),
     )
     plRows = cursor.fetchall()
-    # for i, row in enumerate(plRows):
-    #     print("{}: {}|{}|{}".format(i, row[0], row[1], row[2]))
-    # input("Press ENTER to continue.")
-
     # Display query in paginated downward format
     pivot = 0  # This is the starting index to display
     numEntities = len(plRows)
@@ -69,9 +66,7 @@ def viewPlaylist(connection, cursor, pid):
                 index = int(cmd)
                 if index >= pivot and index < pivot + 5 and index < numEntities:
                     # Song selection is valid
-                    print("Performing song action...")
-                    input()
-                    pass
+                    song_action(connection, cursor, username)
                 else:
                     # Song selection is invalid
                     print("Invalid index. Press ENTER to continue.")
@@ -87,7 +82,7 @@ def viewPlaylist(connection, cursor, pid):
 # Input: connection, cursor, name is a string, nationality is a string
 # Output: None
 #
-def view_artist(connection, cursor, name, nationality):
+def view_artist(connection, cursor, name, nationality, username):
     os.system("cls")
     cursor.execute(
         """
@@ -103,9 +98,6 @@ def view_artist(connection, cursor, name, nationality):
         ),
     )
     a_rows = cursor.fetchall()
-    # for i, row in enumerate(a_rows):
-    #     print("{}: {}|{}|{}".format(i, row[0], row[1], row[2]))
-    # input("Press ENTER to continue.")
 
     pivot = 0  # This is the starting index to display
     numEntities = len(a_rows)
@@ -137,9 +129,7 @@ def view_artist(connection, cursor, name, nationality):
                 index = int(cmd)
                 if index >= pivot and index < pivot + 5 and index < numEntities:
                     # Song selection is valid
-                    print("Performing song action...")
-                    input()
-                    pass
+                    song_action(connection, cursor, username)
                 else:
                     # Song selection is invalid
                     print("Invalid index. Press ENTER to continue.")
@@ -161,9 +151,9 @@ def sys_func(connection, cursor, username):
         if sys_func_op == 1:
             start_new_session(connection, cursor, username)
         elif sys_func_op == 2:
-            search_for_song_and_playlist(connection, cursor)
+            search_for_song_and_playlist(connection, cursor, username)
         elif sys_func_op == 3:
-            search_for_artists(connection, cursor)
+            search_for_artists(connection, cursor, username)
         elif sys_func_op == 4:
             end_current_session(connection, cursor, username)
         elif sys_func_op == 5:
@@ -213,6 +203,7 @@ def sys_func_ui(connection, cursor):
             return 6
         else:
             print("Invalid input.")
+            return -1
 
 
 #
@@ -270,7 +261,7 @@ def start_new_session(connection, cursor, username):
 # Input: connection, cursor
 # Output: None
 #
-def search_for_song_and_playlist(connection, cursor):
+def search_for_song_and_playlist(connection, cursor, username):
     global keywords  # This list needs to be global because the countMatch function needs to use this list to
     # sort songs and playlists by number of matches
 
@@ -359,10 +350,13 @@ def search_for_song_and_playlist(connection, cursor):
                     # Song/Playlist selection is valid
                     if songs_and_playlists_rows[index][0] == "song":
                         # Perform a song action
-                        pass
+                        song_action(connection, cursor, username)
                     else:
                         viewPlaylist(
-                            connection, cursor, songs_and_playlists_rows[index][1]
+                            connection,
+                            cursor,
+                            songs_and_playlists_rows[index][1],
+                            username,
                         )
                 else:
                     # Song/Playlist selection is invalid
@@ -379,7 +373,7 @@ def search_for_song_and_playlist(connection, cursor):
 # Input: connection, cursor
 # Output: None
 #
-def search_for_artists(connection, cursor):
+def search_for_artists(connection, cursor, username):
     global keywords
 
     print(
@@ -411,9 +405,6 @@ def search_for_artists(connection, cursor):
         )
     )
     artist_rows = cursor.fetchall()
-    # for row in artist_rows:
-    #     print("{}|{}|{}".format(row[0], row[1], row[2]))
-    # Display query in paginated downward format
     pivot = 0  # This is the starting index to display
     numEntities = len(artist_rows)
     while True:

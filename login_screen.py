@@ -2,10 +2,10 @@ from settings import *
 
 #
 # This function handles the main UI. The main UI prompts the user to login or sign up
-# Input: connection, cursor
+# Input: None
 # Output: 1 to login, 2 to sign up
 #
-def main_screen(connection, cursor):
+def main_screen():
     while True:
         os.system("cls")
         print("--- Main Screen ---")
