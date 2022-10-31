@@ -6,14 +6,14 @@ from settings import *
 # Input: connection, cursor, username
 # Output: None
 #
-def song_action(connection, cursor, username):
+def song_action(connection, cursor, username, sid):
     while True:
         song_action_op = song_action_ui(connection, cursor)
-        if song_action_op == 1:
+        if song_action_op == 1:  # Listen to song
+            listen_to_song(connection, cursor, username, sid)
+        elif song_action_op == 2:  # See more information about song
             pass
-        elif song_action_op == 2:
-            pass
-        elif song_action_op == 3:
+        elif song_action_op == 3:  # Add song to playlist
             pass
         elif song_action_op == 4:
             return
@@ -57,5 +57,75 @@ def song_action_ui(connection, cursor):
 # Input: connection, cursor, username
 # Output: None
 #
-def listen_to_song(connection, cursor, username):
-    pass
+def listen_to_song(connection, cursor, username, sid):
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM sessions
+        WHERE compare(uid, ?)
+        AND end IS NULL;""",
+        (username,),
+    )
+    num_of_active_sessions = cursor.fetchone()[0]
+    active_sno = 0
+    if num_of_active_sessions > 0:
+        cursor.execute(
+            """
+            SELECT sno
+            FROM sessions
+            WHERE compare(uid, ?)
+            AND end IS NULL;""",
+            (username,),
+        )
+        active_sno = cursor.fetchone()[0]
+    else:
+        current_date = time.strftime("%Y-%m-%d %H:%M:%S")
+        # Create a unique session number (sno)
+        cursor.execute(
+            """
+            SELECT sno
+            FROM sessions
+            WHERE compare(uid, ?);""",
+            (username,),
+        )
+        user_sessions = cursor.fetchall()
+        user_sessions = [row[0] for row in user_sessions]
+        while active_sno in user_sessions:
+            active_sno = random.randint(0, 10 ** 9)
+        # Add a new session
+        cursor.execute(
+            """
+            INSERT INTO sessions(uid, sno, start, end) VALUES (
+                ?, ?, ?, NULL);""",
+            (username, active_sno, current_date),
+        )
+        connection.commit()
+    # Check if user already listened to song in the active session
+    cursor.execute(
+        """
+        SELECT sid
+        FROM listen
+        WHERE compare(uid, ?)
+        AND sno = ?
+        AND sid = ?;""",
+        (username, active_sno, sid),
+    )
+    listening_to_song_list = cursor.fetchall()
+    if len(listening_to_song_list) > 0:
+        cursor.execute(
+            """
+            UPDATE listen SET cnt = cnt + 1
+            WHERE compare(uid, ?)
+            AND sno = ?
+            AND sid = ?;""",
+            (username, active_sno, sid),
+        )
+        connection.commit()
+    else:
+        cursor.execute(
+            """
+            INSERT INTO listen
+            VALUES (?, ?, ?, 1);""",
+            (username, active_sno, sid),
+        )
+        connection.commit()

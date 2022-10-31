@@ -110,7 +110,7 @@ insert into songs values (31, "Test3", 3);
 
 insert into sessions values ("admin", 0, "2022-10-23 16:01:41", "2022-10-23 17:26:32");
 insert into sessions values ("admin", 1, "2022-10-23 17:27:27", "2022-10-23 17:28:28");
-insert into sessions values ("admin", 2, "2022-10-23 17:36:36", "2022-10-23 17:48:48");
+insert into sessions values ("admin", 2, "2022-10-23 17:36:36", NULL);
 insert into sessions values ("ss", 0, "2022-10-25 14:34:08", NULL);
 insert into sessions values ("ps", 0, "2022-10-25 14:36:21", NULL);
 
@@ -122,6 +122,7 @@ insert into listen values ("admin", 0, 4, 1);
 insert into listen values ("admin", 0, 5, 1);
 insert into listen values ("admin", 0, 6, 2);
 insert into listen values ("admin", 0, 14, 3);
+-- insert into listen values ("admin", 2, 0, 1);
 insert into listen values ("ss", 0, 0, 2);
 insert into listen values ("ss", 0, 6, 1);
 insert into listen values ("ss", 0, 7, 1);

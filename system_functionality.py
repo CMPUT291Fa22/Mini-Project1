@@ -66,7 +66,7 @@ def viewPlaylist(connection, cursor, pid, username):
                 index = int(cmd)
                 if index >= pivot and index < pivot + 5 and index < numEntities:
                     # Song selection is valid
-                    song_action(connection, cursor, username)
+                    song_action(connection, cursor, username, plRows[index][0])
                 else:
                     # Song selection is invalid
                     print("Invalid index. Press ENTER to continue.")
@@ -86,7 +86,7 @@ def view_artist(connection, cursor, name, nationality, username):
     os.system("cls")
     cursor.execute(
         """
-        SELECT artists.aid, songs.title, songs.duration
+        SELECT artists.aid, songs.title, songs.duration, songs.sid
         FROM artists, perform, songs
         WHERE artists.aid = perform.aid
         AND perform.sid = songs.sid
@@ -129,7 +129,7 @@ def view_artist(connection, cursor, name, nationality, username):
                 index = int(cmd)
                 if index >= pivot and index < pivot + 5 and index < numEntities:
                     # Song selection is valid
-                    song_action(connection, cursor, username)
+                    song_action(connection, cursor, username, a_rows[index][3])
                 else:
                     # Song selection is invalid
                     print("Invalid index. Press ENTER to continue.")
@@ -350,7 +350,12 @@ def search_for_song_and_playlist(connection, cursor, username):
                     # Song/Playlist selection is valid
                     if songs_and_playlists_rows[index][0] == "song":
                         # Perform a song action
-                        song_action(connection, cursor, username)
+                        song_action(
+                            connection,
+                            cursor,
+                            username,
+                            songs_and_playlists_rows[index][1],
+                        )
                     else:
                         viewPlaylist(
                             connection,
@@ -436,7 +441,11 @@ def search_for_artists(connection, cursor, username):
                 if index >= pivot and index < pivot + 5 and index < numEntities:
                     # Artist selection is valid
                     view_artist(
-                        connection, cursor, artist_rows[index][0], artist_rows[index][1]
+                        connection,
+                        cursor,
+                        artist_rows[index][0],
+                        artist_rows[index][1],
+                        username,
                     )
                 else:
                     # Song/Playlist selection is invalid
