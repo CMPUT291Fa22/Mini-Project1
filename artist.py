@@ -165,12 +165,3 @@ def Artists(connection, cursor, username):
             return
         else:
             print("Wrong command")
-
-
-# def main():
-#     path = "./a2.db"
-#     connect(path)
-#     Artists()
-
-# if __name__ == "__main__":
-#     main()
