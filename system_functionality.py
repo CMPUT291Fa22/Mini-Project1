@@ -23,7 +23,7 @@ def countMatch(row):
 # Input: connection, cursor
 # Output: None
 #
-def viewPlaylist(connection, cursor, pid, username):
+def view_playlist(connection, cursor, pid, username):
     os.system("clear")
     cursor.execute(
         """
@@ -357,7 +357,7 @@ def search_for_song_and_playlist(connection, cursor, username):
                             songs_and_playlists_rows[index][1],
                         )
                     else:
-                        viewPlaylist(
+                        view_playlist(
                             connection,
                             cursor,
                             songs_and_playlists_rows[index][1],
